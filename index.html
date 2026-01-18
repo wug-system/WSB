@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduQuest: Arena Pengetahuan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* CSS sama seperti sebelumnya, aku tidak ulang biar ringkas */
+    .answer-btn { transition: all 0.3s ease; border: 2px solid transparent; }
+    .answer-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    .correct { background-color: rgba(16, 185, 129, 0.4) !important; border-color: #10b981 !important; animation: correctPulse 0.8s ease; }
+    .wrong { background-color: rgba(239, 68, 68, 0.4) !important; border-color: #ef4444 !important; animation: wrongShake 0.6s ease; }
+    @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes wrongShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
+    #timer.low { color: #ef4444; animation: pulse 1s infinite; }
+    #timer.medium { color: #fbbf24; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .subject-card { transition: all 0.3s; }
+    .subject-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+    #subjectsGrid { max-height: 60vh; overflow-y: auto; padding: 1.5rem; border-radius: 1rem; background: rgba(30,41,59,0.6); scrollbar-width: thin; }
+    #subjectsGrid::-webkit-scrollbar { width: 8px; }
+    #subjectsGrid::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+    #subjectsGrid::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-screen">
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Header -->
+  <header class="flex justify-between items-center mb-12">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl flex items-center justify-center text-4xl shadow-2xl shadow-blue-500/40">🚀</div>
+      <div>
+        <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">EduQuest</h1>
+        <p class="text-slate-400 font-medium">Arena Pengetahuan Sesuai Kurikulum Merdeka 2026</p>
+      </div>
+    </div>
+    <button id="configBtn" class="bg-slate-800/80 hover:bg-slate-700 px-6 py-3 rounded-xl transition flex items-center gap-2 backdrop-blur-sm border border-slate-700 shadow-lg">
+      <i class="fas fa-cog"></i> Pengaturan
+    </button>
+  </header>
+
+  <!-- Start Screen -->
+  <div id="startScreen" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-md">
+    <div class="bg-slate-900/90 p-8 md:p-12 rounded-3xl border border-slate-600 max-w-5xl w-full text-center shadow-2xl overflow-hidden">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Selamat Datang di EduQuest!</h2>
+      <p class="text-lg md:text-xl text-slate-300 mb-10 md:mb-12">Pilih tingkat pendidikan, lalu mata pelajaran favorit, dan buktikan kemampuanmu!</p>
+
+      <!-- Pilih Tingkat Pendidikan -->
+      <div class="grid gap-6 grid-cols-1 sm:grid-cols-3 mb-12 md:mb-16">
+        <button onclick="selectLevel('sd')" class="bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
+          <i class="fas fa-child text-5xl mb-4 block"></i>SD
+        </button>
+        <button onclick="selectLevel('smp')" class="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
+          <i class="fas fa-graduation-cap text-5xl mb-4 block"></i>SMP
+        </button>
+        <button onclick="selectLevel('sma')" class="bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
+          <i class="fas fa-user-graduate text-5xl mb-4 block"></i>SMA/SMK
+        </button>
+      </div>
+
+      <!-- Pilih Mata Pelajaran -->
+      <div id="subjectSelection" class="hidden">
+        <h3 class="text-3xl font-bold mb-8">Pilih Mata Pelajaran</h3>
+        <div id="subjectsGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="gameArea" class="hidden">
+    <div class="bg-slate-900/70 backdrop-blur-lg p-6 md:p-8 rounded-3xl border border-slate-700/50 shadow-2xl">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+        <div class="text-xl font-medium">
+          Pertanyaan <span id="qNumber" class="font-bold text-blue-400">1</span> dari <span id="totalQ"></span>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <span class="text-yellow-400 text-2xl">⭐</span>
+            <span id="score" class="font-bold text-3xl">0</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="timer" class="font-bold text-3xl text-emerald-400">30</span>
+            <span class="text-slate-400 text-lg">detik</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="question" class="text-xl md:text-3xl font-semibold mb-8 md:mb-10 text-center min-h-[80px] md:min-h-[100px] leading-relaxed"></div>
+
+      <div id="options" class="grid gap-4 md:gap-5 grid-cols-1 md:grid-cols-2"></div>
+
+      <div id="feedback" class="mt-8 md:mt-10 text-xl md:text-2xl font-bold text-center feedback hidden"></div>
+    </div>
+  </div>
+
+  <!-- Settings Modal (bisa ditambah form import soal nanti) -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 items-center justify-center backdrop-blur-sm">
+    <div class="bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-700 w-full max-w-lg shadow-2xl">
+      <h2 class="text-3xl font-bold mb-8 text-center">Pengaturan</h2>
+      <div class="text-center text-slate-300 mb-6">Database soal sudah terintegrasi dengan IndexedDB!</div>
+      <div class="flex justify-center gap-4">
+        <button onclick="resetDatabase()" class="px-8 py-4 bg-red-600 hover:bg-red-500 rounded-2xl transition font-bold">Reset Database</button>
+        <button id="closeSettings" class="px-10 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl transition font-bold">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================= DATABASE SETUP (IndexedDB) =================
+let db;
+const DB_NAME = "EduQuestDB";
+const DB_VERSION = 1;
+const STORE_NAME = "soal";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      db = request.result;
+      resolve(db);
+    };
+
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
+        store.createIndex("tingkat", "tingkat", { unique: false });
+        store.createIndex("mapel", "mapel", { unique: false });
+      }
+    };
+  });
+}
+
+// Fungsi untuk seed data awal (jalankan sekali saat pertama load)
+async function seedDatabase() {
+  const tx = db.transaction(STORE_NAME, "readwrite");
+  const store = tx.objectStore(STORE_NAME);
+
+  // Cek apakah sudah ada data
+  const countRequest = store.count();
+  countRequest.onsuccess = async () => {
+    if (countRequest.result === 0) {
+      console.log("Seeding database soal awal...");
+
+      const initialSoal = [
+        // SD - Bahasa Indonesia
+        { tingkat: "sd", mapel: "Bahasa Indonesia", pertanyaan: "Apa yang dimaksud dengan pantun?", pilihan: ["Cerita pendek", "Puisi berima", "Lagu daerah", "Dongeng"], jawabanBenar: 1 },
+        { tingkat: "sd", mapel: "Bahasa Indonesia", pertanyaan: "Sinonim dari kata 'rajin' adalah...", pilihan: ["Malas", "Tekun", "Lambat", "Ceroboh"], jawabanBenar: 1 },
+        // ... tambahkan ratusan soal lain di sini (contoh pendek, kamu bisa copy dari list sebelumnya)
+        // SD - Matematika
+        { tingkat: "sd", mapel: "Matematika", pertanyaan: "5 + 3 × 2 = ?", pilihan: ["16", "11", "8", "10"], jawabanBenar: 1 },
+        // ... dan seterusnya untuk semua tingkat & mapel
+        // Contoh SMP & SMA (tambahkan sesuai kebutuhan)
+      ];
+
+      initialSoal.forEach(soal => store.add(soal));
+
+      await tx.done;
+      console.log("Database seeded!");
+    }
+  };
+}
+
+// Fungsi ambil soal berdasarkan tingkat & mapel
+async function getSoal(tingkat, mapel) {
+  return new Promise((resolve) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const index = store.index("tingkat");
+    const request = index.getAll(tingkat);
+
+    request.onsuccess = () => {
+      const filtered = request.result.filter(s => s.mapel === mapel);
+      resolve(filtered);
+    };
+  });
+}
+
+// ================= INISIALISASI =================
+document.addEventListener('DOMContentLoaded', async () => {
+  await openDB();
+  await seedDatabase();
+
+  document.getElementById('configBtn').addEventListener('click', () => {
+    document.getElementById('settingsModal').classList.remove('hidden');
+    document.getElementById('settingsModal').classList.add('flex');
+  });
+
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    document.getElementById('settingsModal').classList.add('hidden');
+  });
+
+  window.selectLevel = async function(level) {
+    currentGame.level = level;
+    document.getElementById('subjectSelection').classList.remove('hidden');
+    renderSubjects(level);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  function renderSubjects(level) {
+    const grid = document.getElementById('subjectsGrid');
+    grid.innerHTML = '';
+    subjects[level].forEach(sub => {
+      const btn = document.createElement('button');
+      btn.className = `subject-card bg-gradient-to-br from-${sub.color}-600 to-${sub.color}-500 hover:from-${sub.color}-500 hover:to-${sub.color}-400 p-6 md:p-8 rounded-2xl font-bold text-lg md:text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl text-white flex flex-col items-center justify-center`;
+      btn.innerHTML = `<i class="${sub.icon} text-4xl md:text-5xl mb-4"></i>${sub.name}`;
+      btn.onclick = () => startGameWithSubject(sub.name);
+      grid.appendChild(btn);
+    });
+  }
+
+  window.startGameWithSubject = async function(subjectName) {
+    currentGame.subject = subjectName;
+    currentGame.questions = await getSoal(currentGame.level, subjectName);
+    currentGame.currentIndex = 0;
+    currentGame.score = 0;
+    currentGame.timeLeft = 30;
+
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('gameArea').classList.remove('hidden');
+    document.getElementById('totalQ').textContent = currentGame.questions.length;
+
+    nextQuestion();
+  };
+
+  // Fungsi game lainnya (nextQuestion, startTimer, checkAnswer, dll) sama seperti sebelumnya
+  // Copy-paste dari kode game kamu sebelumnya di sini
+
+  // Contoh singkat nextQuestion (lengkapi sesuai kode game kamu)
+  function nextQuestion() {
+    if (currentGame.currentIndex >= currentGame.questions.length) {
+      // endGame();
+      alert("Selesai! Skor: " + currentGame.score);
+      return;
+    }
+
+    const q = currentGame.questions[currentGame.currentIndex];
+    document.getElementById('question').textContent = q.pertanyaan;
+    document.getElementById('qNumber').textContent = currentGame.currentIndex + 1;
+
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+    q.pilihan.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'answer-btn w-full bg-slate-800/80 hover:bg-slate-700 p-5 rounded-2xl text-left text-lg';
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(idx === q.jawabanBenar, btn, q.pilihan[q.jawabanBenar]);
+      optionsDiv.appendChild(btn);
+    });
+
+    startTimer();
+  }
+
+  // ... (lanjutkan dengan startTimer, checkAnswer, showFeedback, endGame seperti kode sebelumnya)
+});
+
+// Reset database (untuk development)
+window.resetDatabase = function() {
+  indexedDB.deleteDatabase(DB_NAME);
+  location.reload();
+};
+</script>
+</body>
+</html>
