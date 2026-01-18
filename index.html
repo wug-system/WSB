@@ -3,15 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduQuest: Arena Pengetahuan</title>
+  <title>WSB - Waktu Sekolah Bercanda</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* CSS sama seperti sebelumnya, aku tidak ulang biar ringkas */
-    .answer-btn { transition: all 0.3s ease; border: 2px solid transparent; }
-    .answer-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-    .correct { background-color: rgba(16, 185, 129, 0.4) !important; border-color: #10b981 !important; animation: correctPulse 0.8s ease; }
-    .wrong { background-color: rgba(239, 68, 68, 0.4) !important; border-color: #ef4444 !important; animation: wrongShake 0.6s ease; }
+    .answer-btn {
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .answer-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    .correct {
+      background-color: rgba(16, 185, 129, 0.4) !important;
+      border-color: #10b981 !important;
+      animation: correctPulse 0.8s ease;
+    }
+    .wrong {
+      background-color: rgba(239, 68, 68, 0.4) !important;
+      border-color: #ef4444 !important;
+      animation: wrongShake 0.6s ease;
+    }
     @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
     @keyframes wrongShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
     #timer.low { color: #ef4444; animation: pulse 1s infinite; }
@@ -19,7 +32,14 @@
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
     .subject-card { transition: all 0.3s; }
     .subject-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
-    #subjectsGrid { max-height: 60vh; overflow-y: auto; padding: 1.5rem; border-radius: 1rem; background: rgba(30,41,59,0.6); scrollbar-width: thin; }
+    #subjectsGrid { 
+      max-height: 60vh; 
+      overflow-y: auto; 
+      padding: 1.5rem; 
+      border-radius: 1rem; 
+      background: rgba(30,41,59,0.6); 
+      scrollbar-width: thin; 
+    }
     #subjectsGrid::-webkit-scrollbar { width: 8px; }
     #subjectsGrid::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
     #subjectsGrid::-webkit-scrollbar-track { background: transparent; }
@@ -31,10 +51,10 @@
   <!-- Header -->
   <header class="flex justify-between items-center mb-12">
     <div class="flex items-center gap-4">
-      <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl flex items-center justify-center text-4xl shadow-2xl shadow-blue-500/40">🚀</div>
+      <div class="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl flex items-center justify-center text-4xl shadow-2xl shadow-green-500/40">😆</div>
       <div>
-        <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">EduQuest</h1>
-        <p class="text-slate-400 font-medium">Arena Pengetahuan Sesuai Kurikulum Merdeka 2026</p>
+        <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">WSB</h1>
+        <p class="text-slate-400 font-medium">Waktu Sekolah Bercanda – Belajar Sambil Ketawa!</p>
       </div>
     </div>
     <button id="configBtn" class="bg-slate-800/80 hover:bg-slate-700 px-6 py-3 rounded-xl transition flex items-center gap-2 backdrop-blur-sm border border-slate-700 shadow-lg">
@@ -45,15 +65,15 @@
   <!-- Start Screen -->
   <div id="startScreen" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-md">
     <div class="bg-slate-900/90 p-8 md:p-12 rounded-3xl border border-slate-600 max-w-5xl w-full text-center shadow-2xl overflow-hidden">
-      <h2 class="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Selamat Datang di EduQuest!</h2>
-      <p class="text-lg md:text-xl text-slate-300 mb-10 md:mb-12">Pilih tingkat pendidikan, lalu mata pelajaran favorit, dan buktikan kemampuanmu!</p>
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Selamat Datang di WSB!</h2>
+      <p class="text-lg md:text-xl text-slate-300 mb-10 md:mb-12">Pilih tingkat kelasmu, lalu mata pelajaran yang mau dibecandain!</p>
 
-      <!-- Pilih Tingkat Pendidikan -->
+      <!-- Pilih Tingkat -->
       <div class="grid gap-6 grid-cols-1 sm:grid-cols-3 mb-12 md:mb-16">
-        <button onclick="selectLevel('sd')" class="bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
+        <button onclick="selectLevel('sd')" class="bg-gradient-to-br from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
           <i class="fas fa-child text-5xl mb-4 block"></i>SD
         </button>
-        <button onclick="selectLevel('smp')" class="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
+        <button onclick="selectLevel('smp')" class="bg-gradient-to-br from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
           <i class="fas fa-graduation-cap text-5xl mb-4 block"></i>SMP
         </button>
         <button onclick="selectLevel('sma')" class="bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
@@ -74,7 +94,7 @@
     <div class="bg-slate-900/70 backdrop-blur-lg p-6 md:p-8 rounded-3xl border border-slate-700/50 shadow-2xl">
       <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         <div class="text-xl font-medium">
-          Pertanyaan <span id="qNumber" class="font-bold text-blue-400">1</span> dari <span id="totalQ"></span>
+          Pertanyaan <span id="qNumber" class="font-bold text-green-400">1</span> dari <span id="totalQ"></span>
         </div>
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-3">
@@ -96,97 +116,166 @@
     </div>
   </div>
 
-  <!-- Settings Modal (bisa ditambah form import soal nanti) -->
+  <!-- Settings Modal -->
   <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 items-center justify-center backdrop-blur-sm">
     <div class="bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-700 w-full max-w-lg shadow-2xl">
-      <h2 class="text-3xl font-bold mb-8 text-center">Pengaturan</h2>
-      <div class="text-center text-slate-300 mb-6">Database soal sudah terintegrasi dengan IndexedDB!</div>
-      <div class="flex justify-center gap-4">
-        <button onclick="resetDatabase()" class="px-8 py-4 bg-red-600 hover:bg-red-500 rounded-2xl transition font-bold">Reset Database</button>
-        <button id="closeSettings" class="px-10 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl transition font-bold">Tutup</button>
+      <h2 class="text-3xl font-bold mb-8 text-center">Pengaturan WSB</h2>
+      <div class="text-center text-slate-300 mb-6">Belum ada pengaturan khusus nih, tapi nanti bisa tambah nama, tema, dll!</div>
+      <div class="flex justify-center">
+        <button id="closeSettings" class="px-10 py-4 bg-green-600 hover:bg-green-500 rounded-2xl transition font-bold">Tutup</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ================= DATABASE SETUP (IndexedDB) =================
-let db;
-const DB_NAME = "EduQuestDB";
-const DB_VERSION = 1;
-const STORE_NAME = "soal";
+// ================= DATA SOAL (BANK SOAL LENGKAP) =================
+const gameData = {
+  sd: {
+    "Bahasa Indonesia": [
+      { q: "Apa yang dimaksud dengan pantun?", a: ["Cerita pendek", "Puisi berima", "Lagu daerah", "Dongeng"], correct: 1 },
+      { q: "Sinonim dari kata 'rajin' adalah...", a: ["Malas", "Tekun", "Lambat", "Ceroboh"], correct: 1 },
+      { q: "Antonym dari 'besar' adalah...", a: ["Kecil", "Tinggi", "Panjang", "Lebar"], correct: 0 },
+      { q: "Kalimat perintah diakhiri dengan tanda...", a: ["Titik", "Seru (!)", "Tanya (?)", "Koma (,)"], correct: 1 },
+      { q: "Apa judul lagu kebangsaan Indonesia?", a: ["Indonesia Raya", "Majulah Indonesia", "Garuda Pancasila", "Hari Merdeka"], correct: 0 },
+      { q: "Apa arti kata 'cerdas'?", a: ["Bodoh", "Pintar", "Lambat", "Malas"], correct: 1 },
+      { q: "Apa itu cerita fabel?", a: ["Cerita tentang hewan", "Cerita sejarah", "Cerita horor", "Cerita romantis"], correct: 0 },
+      { q: "Apa itu ejaan?", a: ["Cara menulis kata", "Cara membaca", "Cara berbicara", "Cara mendengar"], correct: 0 },
+      { q: "Apa itu puisi?", a: ["Karangan bebas", "Karangan berima", "Karangan panjang", "Karangan pendek"], correct: 1 },
+      { q: "Apa sinonim dari 'senang'?", a: ["Sedih", "Gembira", "Marah", "Takut"], correct: 1 },
+      { q: "Apa itu dongeng?", a: ["Cerita nyata", "Cerita khayalan", "Cerita sejarah", "Cerita berita"], correct: 1 },
+      { q: "Kalimat berita diakhiri dengan tanda...", a: ["Seru", "Tanya", "Titik", "Koma"], correct: 2 }
+    ],
+    "Matematika": [
+      { q: "5 + 3 × 2 = ?", a: ["16", "11", "8", "10"], correct: 1 },
+      { q: "Berapa sisi segitiga?", a: ["4", "3", "5", "6"], correct: 1 },
+      { q: "12 ÷ 4 = ?", a: ["2", "3", "4", "6"], correct: 1 },
+      { q: "15 - 7 = ?", a: ["8", "9", "7", "10"], correct: 0 },
+      { q: "Pecahan dari 0.75 adalah...", a: ["1/2", "3/4", "1/4", "2/3"], correct: 1 },
+      { q: "1 lusin = 12, maka 3 lusin = ?", a: ["30", "36", "24", "48"], correct: 1 },
+      { q: "Keliling persegi sisi 6 cm adalah...", a: ["18 cm", "24 cm", "36 cm", "12 cm"], correct: 1 },
+      { q: "Luas persegi sisi 5 cm adalah...", a: ["20 cm²", "25 cm²", "15 cm²", "30 cm²"], correct: 1 },
+      { q: "10 × 7 = ?", a: ["60", "70", "80", "90"], correct: 1 },
+      { q: "Bilangan Romawi untuk 50 adalah...", a: ["L", "C", "X", "V"], correct: 0 }
+    ],
+    "IPA": [
+      { q: "Organ yang memompa darah adalah...", a: ["Hati", "Jantung", "Paru-paru", "Ginjal"], correct: 1 },
+      { q: "Hewan yang bernapas dengan insang adalah...", a: ["Kucing", "Ikan", "Burung", "Kelinci"], correct: 1 },
+      { q: "Sumber energi utama Bumi adalah...", a: ["Angin", "Matahari", "Air", "Batu bara"], correct: 1 },
+      { q: "Air menjadi es disebut proses...", a: ["Menguap", "Membeku", "Mengembun", "Mencair"], correct: 1 },
+      { q: "Fungsi akar tumbuhan adalah...", a: ["Membuat bunga", "Menyerap air", "Membuat makanan", "Bernapas"], correct: 1 },
+      { q: "Tumbuhan membuat makanan melalui proses...", a: ["Fotosintesis", "Respirasi", "Pencernaan", "Penguapan"], correct: 0 },
+      { q: "Planet kita bernama...", a: ["Mars", "Bumi", "Venus", "Jupiter"], correct: 1 },
+      { q: "Hewan omnivora makan...", a: ["Tumbuhan saja", "Daging saja", "Tumbuhan dan daging", "Tanah"], correct: 2 },
+      { q: "Warna langit cerah adalah...", a: ["Merah", "Biru", "Hijau", "Kuning"], correct: 1 },
+      { q: "Hujan disebabkan oleh...", a: ["Awan", "Angin", "Matahari", "Bulan"], correct: 0 }
+    ],
+    "IPS": [
+      { q: "Presiden pertama Indonesia adalah...", a: ["Soeharto", "Soekarno", "Jokowi", "Habibie"], correct: 1 },
+      { q: "Ibu kota Indonesia adalah...", a: ["Surabaya", "Jakarta", "Bandung", "Medan"], correct: 1 },
+      { q: "Hari Kemerdekaan diperingati tanggal...", a: ["17 Agustus", "1 Juni", "20 Mei", "10 November"], correct: 0 },
+      { q: "Lambang negara Indonesia adalah...", a: ["Garuda Pancasila", "Bintang", "Bulan", "Matahari"], correct: 0 },
+      { q: "Indonesia memiliki sekitar berapa pulau?", a: ["1", "17.000+", "5", "100"], correct: 1 },
+      { q: "Sungai terpanjang di Indonesia adalah...", a: ["Kapuas", "Ciliwung", "Bengawan Solo", "Mahakam"], correct: 0 },
+      { q: "Gunung tertinggi di Indonesia adalah...", a: ["Puncak Jaya", "Merapi", "Rinjani", "Semeru"], correct: 0 },
+      { q: "Pahlawan emansipasi wanita Indonesia adalah...", a: ["R.A. Kartini", "Cut Nyak Dhien", "Dewi Sartika", "Fatmawati"], correct: 0 },
+      { q: "Mata uang Indonesia adalah...", a: ["Dollar", "Rupiah", "Yen", "Euro"], correct: 1 },
+      { q: "Ibu kota Provinsi Jawa Barat adalah...", a: ["Bandung", "Semarang", "Surabaya", "Yogyakarta"], correct: 0 }
+    ],
+    "Bahasa Jepang": [
+      { q: "Arti 'arigatou' adalah...", a: ["Terima kasih", "Selamat pagi", "Selamat malam", "Halo"], correct: 0 },
+      { q: "Hiragana untuk 'a' adalah...", a: ["あ", "い", "う", "え"], correct: 0 },
+      { q: "Arti 'konbanwa' adalah...", a: ["Selamat pagi", "Selamat siang", "Selamat malam", "Selamat tinggal"], correct: 2 },
+      { q: "Makanan nasi gulung Jepang disebut...", a: ["Sushi", "Ramen", "Tempura", "Sashimi"], correct: 0 },
+      { q: "Arti 'sayonara' adalah...", a: ["Halo", "Selamat tinggal", "Terima kasih", "Maaf"], correct: 1 },
+      { q: "Ibu kota Jepang adalah...", a: ["Tokyo", "Kyoto", "Osaka", "Hiroshima"], correct: 0 }
+    ],
+    "PPS": [
+      { q: "Sila pertama Pancasila adalah...", a: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang Adil", "Persatuan Indonesia", "Kerakyatan"], correct: 0 },
+      { q: "Pancasila berarti...", a: ["Lima dasar", "Tiga dasar", "Empat dasar", "Enam dasar"], correct: 0 },
+      { q: "Hari lahir Pancasila diperingati tanggal...", a: ["1 Juni", "17 Agustus", "28 Oktober", "10 November"], correct: 0 },
+      { q: "Lambang sila ketiga adalah...", a: ["Pohon Beringin", "Bintang", "Rantai", "Kepala Banteng"], correct: 0 },
+      { q: "Bhinneka Tunggal Ika artinya...", a: ["Berbeda-beda tetapi satu jua", "Sama semua", "Satu saja", "Banyak tapi berbeda"], correct: 0 }
+    ]
+  },
+  smp: {
+    "Bahasa Indonesia": [
+      { q: "Apa itu majas hiperbola?", a: ["Perbandingan", "Pernyataan berlebihan", "Personifikasi", "Metafora"], correct: 1 },
+      { q: "Teks prosedur biasanya berisi...", a: ["Cerita", "Langkah-langkah", "Pendapat", "Deskripsi"], correct: 1 },
+      { q: "Sinonim dari 'optimis' adalah...", a: ["Pesimis", "Yakin", "Takut", "Sedih"], correct: 1 },
+      { q: "Apa itu teks eksposisi?", a: ["Menjelaskan sesuatu", "Menceritakan", "Memerintah", "Menggambarkan"], correct: 0 },
+      { q: "Majas personifikasi adalah...", a: ["Benda seperti manusia", "Berlebihan", "Perbandingan", "Kiasan"], correct: 0 }
+    ],
+    "Matematika": [
+      { q: "Akar kuadrat 144 adalah...", a: ["12", "14", "16", "10"], correct: 0 },
+      { q: "Rumus luas lingkaran adalah...", a: ["πr²", "2πr", "πd", "r²"], correct: 0 },
+      { q: "3x - 6 = 12, x = ?", a: ["6", "4", "3", "18"], correct: 0 }
+    ],
+    // ... tambahkan mapel lain sesuai kebutuhan
+  },
+  sma: {
+    "Bahasa Indonesia": [
+      { q: "Majas hiperbola adalah...", a: ["Pernyataan berlebihan", "Perbandingan langsung", "Penyerupaan", "Pemindahan makna"], correct: 0 },
+      { q: "Tokoh utama novel Bumi Manusia adalah...", a: ["Minke", "Nyai Ontosoroh", "Annelies", "Robert Surcouf"], correct: 0 }
+    ],
+    // ... tambahkan mapel lain
+  }
+};
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+// ================= STATE =================
+let currentGame = {
+  level: null,
+  subject: null,
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  timeLeft: 30,
+  timerId: null
+};
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      db = request.result;
-      resolve(db);
-    };
+const elements = {
+  startScreen: document.getElementById('startScreen'),
+  subjectSelection: document.getElementById('subjectSelection'),
+  subjectsGrid: document.getElementById('subjectsGrid'),
+  gameArea: document.getElementById('gameArea'),
+  questionEl: document.getElementById('question'),
+  optionsEl: document.getElementById('options'),
+  feedbackEl: document.getElementById('feedback'),
+  scoreEl: document.getElementById('score'),
+  timerEl: document.getElementById('timer'),
+  qNumberEl: document.getElementById('qNumber'),
+  totalQEl: document.getElementById('totalQ')
+};
 
-    request.onupgradeneeded = (event) => {
-      db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
-        store.createIndex("tingkat", "tingkat", { unique: false });
-        store.createIndex("mapel", "mapel", { unique: false });
-      }
-    };
-  });
-}
+const subjects = {
+  sd: [
+    { name: "Bahasa Indonesia", icon: "fas fa-book-open", color: "indigo" },
+    { name: "Matematika", icon: "fas fa-square-root-variable", color: "emerald" },
+    { name: "IPA", icon: "fas fa-flask", color: "blue" },
+    { name: "IPS", icon: "fas fa-globe-asia", color: "purple" },
+    { name: "Bahasa Jepang", icon: "fas fa-language", color: "red" },
+    { name: "PPS", icon: "fas fa-landmark", color: "yellow" }
+  ],
+  smp: [
+    { name: "Bahasa Indonesia", icon: "fas fa-book-open", color: "indigo" },
+    { name: "Matematika", icon: "fas fa-square-root-variable", color: "emerald" },
+    { name: "IPA", icon: "fas fa-flask", color: "blue" },
+    { name: "IPS", icon: "fas fa-globe-asia", color: "purple" },
+    { name: "Bahasa Jepang", icon: "fas fa-language", color: "red" },
+    { name: "PPS", icon: "fas fa-landmark", color: "yellow" }
+  ],
+  sma: [
+    { name: "Bahasa Indonesia", icon: "fas fa-book-open", color: "indigo" },
+    { name: "Matematika", icon: "fas fa-square-root-variable", color: "emerald" },
+    { name: "Fisika", icon: "fas fa-atom", color: "cyan" },
+    { name: "Ekonomi", icon: "fas fa-chart-line", color: "amber" },
+    { name: "Bahasa Jepang", icon: "fas fa-language", color: "red" },
+    { name: "PPS", icon: "fas fa-landmark", color: "yellow" }
+  ]
+};
 
-// Fungsi untuk seed data awal (jalankan sekali saat pertama load)
-async function seedDatabase() {
-  const tx = db.transaction(STORE_NAME, "readwrite");
-  const store = tx.objectStore(STORE_NAME);
-
-  // Cek apakah sudah ada data
-  const countRequest = store.count();
-  countRequest.onsuccess = async () => {
-    if (countRequest.result === 0) {
-      console.log("Seeding database soal awal...");
-
-      const initialSoal = [
-        // SD - Bahasa Indonesia
-        { tingkat: "sd", mapel: "Bahasa Indonesia", pertanyaan: "Apa yang dimaksud dengan pantun?", pilihan: ["Cerita pendek", "Puisi berima", "Lagu daerah", "Dongeng"], jawabanBenar: 1 },
-        { tingkat: "sd", mapel: "Bahasa Indonesia", pertanyaan: "Sinonim dari kata 'rajin' adalah...", pilihan: ["Malas", "Tekun", "Lambat", "Ceroboh"], jawabanBenar: 1 },
-        // ... tambahkan ratusan soal lain di sini (contoh pendek, kamu bisa copy dari list sebelumnya)
-        // SD - Matematika
-        { tingkat: "sd", mapel: "Matematika", pertanyaan: "5 + 3 × 2 = ?", pilihan: ["16", "11", "8", "10"], jawabanBenar: 1 },
-        // ... dan seterusnya untuk semua tingkat & mapel
-        // Contoh SMP & SMA (tambahkan sesuai kebutuhan)
-      ];
-
-      initialSoal.forEach(soal => store.add(soal));
-
-      await tx.done;
-      console.log("Database seeded!");
-    }
-  };
-}
-
-// Fungsi ambil soal berdasarkan tingkat & mapel
-async function getSoal(tingkat, mapel) {
-  return new Promise((resolve) => {
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const index = store.index("tingkat");
-    const request = index.getAll(tingkat);
-
-    request.onsuccess = () => {
-      const filtered = request.result.filter(s => s.mapel === mapel);
-      resolve(filtered);
-    };
-  });
-}
-
-// ================= INISIALISASI =================
-document.addEventListener('DOMContentLoaded', async () => {
-  await openDB();
-  await seedDatabase();
-
+// ================= INIT =================
+document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('configBtn').addEventListener('click', () => {
     document.getElementById('settingsModal').classList.remove('hidden');
     document.getElementById('settingsModal').classList.add('flex');
@@ -196,75 +285,131 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('settingsModal').classList.add('hidden');
   });
 
-  window.selectLevel = async function(level) {
+  window.selectLevel = function(level) {
     currentGame.level = level;
-    document.getElementById('subjectSelection').classList.remove('hidden');
+    elements.subjectSelection.classList.remove('hidden');
     renderSubjects(level);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   function renderSubjects(level) {
-    const grid = document.getElementById('subjectsGrid');
-    grid.innerHTML = '';
+    elements.subjectsGrid.innerHTML = '';
     subjects[level].forEach(sub => {
-      const btn = document.createElement('button');
-      btn.className = `subject-card bg-gradient-to-br from-${sub.color}-600 to-${sub.color}-500 hover:from-${sub.color}-500 hover:to-${sub.color}-400 p-6 md:p-8 rounded-2xl font-bold text-lg md:text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl text-white flex flex-col items-center justify-center`;
-      btn.innerHTML = `<i class="${sub.icon} text-4xl md:text-5xl mb-4"></i>${sub.name}`;
-      btn.onclick = () => startGameWithSubject(sub.name);
-      grid.appendChild(btn);
+      const card = document.createElement('button');
+      card.className = `subject-card bg-gradient-to-br from-${sub.color}-600 to-${sub.color}-500 hover:from-${sub.color}-500 hover:to-${sub.color}-400 p-6 md:p-8 rounded-2xl font-bold text-lg md:text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl text-white flex flex-col items-center justify-center`;
+      card.innerHTML = `<i class="${sub.icon} text-4xl md:text-5xl mb-4"></i>${sub.name}`;
+      card.addEventListener('click', () => startGameWithSubject(sub.name));
+      elements.subjectsGrid.appendChild(card);
     });
   }
 
-  window.startGameWithSubject = async function(subjectName) {
+  function startGameWithSubject(subjectName) {
     currentGame.subject = subjectName;
-    currentGame.questions = await getSoal(currentGame.level, subjectName);
+    currentGame.questions = gameData[currentGame.level][subjectName] || [];
     currentGame.currentIndex = 0;
     currentGame.score = 0;
     currentGame.timeLeft = 30;
 
-    document.getElementById('startScreen').classList.add('hidden');
-    document.getElementById('gameArea').classList.remove('hidden');
-    document.getElementById('totalQ').textContent = currentGame.questions.length;
+    elements.startScreen.classList.add('hidden');
+    elements.gameArea.classList.remove('hidden');
+    elements.totalQEl.textContent = currentGame.questions.length || 0;
+
+    if (currentGame.questions.length === 0) {
+      elements.questionEl.textContent = "Belum ada soal untuk mata pelajaran ini. Sabar ya, lagi ditambahin!";
+      return;
+    }
 
     nextQuestion();
-  };
+  }
 
-  // Fungsi game lainnya (nextQuestion, startTimer, checkAnswer, dll) sama seperti sebelumnya
-  // Copy-paste dari kode game kamu sebelumnya di sini
-
-  // Contoh singkat nextQuestion (lengkapi sesuai kode game kamu)
   function nextQuestion() {
     if (currentGame.currentIndex >= currentGame.questions.length) {
-      // endGame();
-      alert("Selesai! Skor: " + currentGame.score);
+      endGame();
       return;
     }
 
     const q = currentGame.questions[currentGame.currentIndex];
-    document.getElementById('question').textContent = q.pertanyaan;
-    document.getElementById('qNumber').textContent = currentGame.currentIndex + 1;
+    elements.questionEl.textContent = q.q;
+    elements.qNumberEl.textContent = currentGame.currentIndex + 1;
+    elements.scoreEl.textContent = currentGame.score;
 
-    const optionsDiv = document.getElementById('options');
-    optionsDiv.innerHTML = '';
-    q.pilihan.forEach((opt, idx) => {
+    elements.optionsEl.innerHTML = '';
+    const shuffled = [...q.a].sort(() => Math.random() - 0.5);
+
+    shuffled.forEach((ans, idx) => {
       const btn = document.createElement('button');
-      btn.className = 'answer-btn w-full bg-slate-800/80 hover:bg-slate-700 p-5 rounded-2xl text-left text-lg';
-      btn.textContent = opt;
-      btn.onclick = () => checkAnswer(idx === q.jawabanBenar, btn, q.pilihan[q.jawabanBenar]);
-      optionsDiv.appendChild(btn);
+      btn.className = 'answer-btn w-full bg-slate-800/80 hover:bg-slate-700 p-5 md:p-6 rounded-2xl text-left text-base md:text-lg border-2 border-slate-600 backdrop-blur-sm transition';
+      btn.textContent = ans;
+      btn.addEventListener('click', () => checkAnswer(ans === q.a[q.correct], btn, q.a[q.correct]));
+      elements.optionsEl.appendChild(btn);
     });
 
     startTimer();
   }
 
-  // ... (lanjutkan dengan startTimer, checkAnswer, showFeedback, endGame seperti kode sebelumnya)
-});
+  function startTimer() {
+    if (currentGame.timerId) clearInterval(currentGame.timerId);
 
-// Reset database (untuk development)
-window.resetDatabase = function() {
-  indexedDB.deleteDatabase(DB_NAME);
-  location.reload();
-};
+    currentGame.timeLeft = 30;
+    elements.timerEl.textContent = currentGame.timeLeft;
+    elements.timerEl.className = 'font-bold text-2xl md:text-3xl text-emerald-400';
+
+    currentGame.timerId = setInterval(() => {
+      currentGame.timeLeft--;
+      elements.timerEl.textContent = currentGame.timeLeft;
+
+      if (currentGame.timeLeft <= 10) elements.timerEl.classList.add('low');
+      else if (currentGame.timeLeft <= 20) elements.timerEl.classList.add('medium');
+
+      if (currentGame.timeLeft <= 0) {
+        clearInterval(currentGame.timerId);
+        showFeedback(false, "Waktu habis bro!");
+        setTimeout(nextQuestion, 2500);
+      }
+    }, 1000);
+  }
+
+  function checkAnswer(isCorrect, clickedBtn, correctAnswer) {
+    clearInterval(currentGame.timerId);
+    document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
+
+    if (isCorrect) {
+      currentGame.score += 10 + Math.floor(currentGame.timeLeft / 2);
+      clickedBtn.classList.add('correct');
+      showFeedback(true, `Bener bro! +${10 + Math.floor(currentGame.timeLeft / 2)} poin`);
+    } else {
+      clickedBtn.classList.add('wrong');
+      showFeedback(false, `Salah bro! Jawaban bener: <span class="text-emerald-300 font-bold">${correctAnswer}</span>`);
+    }
+
+    setTimeout(() => {
+      currentGame.currentIndex++;
+      nextQuestion();
+    }, 2800);
+  }
+
+  function showFeedback(isCorrect, message) {
+    elements.feedbackEl.innerHTML = message;
+    elements.feedbackEl.className = isCorrect 
+      ? 'text-emerald-400 text-xl md:text-2xl font-bold animate-pop feedback' 
+      : 'text-rose-400 text-xl md:text-2xl font-bold animate-pop feedback';
+    elements.feedbackEl.classList.remove('hidden');
+    setTimeout(() => elements.feedbackEl.classList.add('hidden'), 2500);
+  }
+
+  function endGame() {
+    elements.gameArea.innerHTML = `
+      <div class="text-center py-16 md:py-24">
+        <h2 class="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Selesai Bro!</h2>
+        <p class="text-3xl md:text-4xl mb-8">Skor Akhir: <span class="font-black text-emerald-400">${currentGame.score}</span></p>
+        <p class="text-xl md:text-2xl text-slate-300 mb-10">Mapel: ${currentGame.subject} - Kelas ${currentGame.level.toUpperCase()}</p>
+        <button onclick="location.reload()" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 px-10 md:px-12 py-5 md:py-6 rounded-3xl text-xl md:text-2xl font-bold transition transform hover:scale-110 shadow-2xl">
+          Main Lagi Dong!
+        </button>
+      </div>
+    `;
+  }
+});
 </script>
 </body>
 </html>
