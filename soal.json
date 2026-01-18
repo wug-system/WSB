@@ -1,0 +1,17 @@
+[
+  {
+    "tingkat": "sd",
+    "mapel": "Matematika",
+    "pertanyaan": "5 + 3 × 2 = ?",
+    "pilihan": ["16", "11", "8", "10"],
+    "jawabanBenar": 1
+  },
+  {
+    "tingkat": "sd",
+    "mapel": "Bahasa Indonesia",
+    "pertanyaan": "Sinonim dari 'rajin' adalah...",
+    "pilihan": ["Malas", "Tekun", "Lambat", "Ceroboh"],
+    "jawabanBenar": 1
+  }
+  // tambah ratusan soal lain di sini
+]
