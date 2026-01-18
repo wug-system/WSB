@@ -7,24 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    .answer-btn {
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-    }
-    .answer-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    }
-    .correct {
-      background-color: rgba(16, 185, 129, 0.4) !important;
-      border-color: #10b981 !important;
-      animation: correctPulse 0.8s ease;
-    }
-    .wrong {
-      background-color: rgba(239, 68, 68, 0.4) !important;
-      border-color: #ef4444 !important;
-      animation: wrongShake 0.6s ease;
-    }
+    .answer-btn { transition: all 0.3s ease; border: 2px solid transparent; }
+    .answer-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    .correct { background-color: rgba(16, 185, 129, 0.4) !important; border-color: #10b981 !important; animation: correctPulse 0.8s ease; }
+    .wrong { background-color: rgba(239, 68, 68, 0.4) !important; border-color: #ef4444 !important; animation: wrongShake 0.6s ease; }
     @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
     @keyframes wrongShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
     #timer.low { color: #ef4444; animation: pulse 1s infinite; }
@@ -48,7 +34,6 @@
 <body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-screen">
 
 <div class="max-w-6xl mx-auto px-4 py-8">
-  <!-- Header -->
   <header class="flex justify-between items-center mb-12">
     <div class="flex items-center gap-4">
       <div class="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl flex items-center justify-center text-4xl shadow-2xl shadow-green-500/40">😆</div>
@@ -62,13 +47,11 @@
     </button>
   </header>
 
-  <!-- Start Screen -->
   <div id="startScreen" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-md">
     <div class="bg-slate-900/90 p-8 md:p-12 rounded-3xl border border-slate-600 max-w-5xl w-full text-center shadow-2xl overflow-hidden">
       <h2 class="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Selamat Datang di WSB!</h2>
       <p class="text-lg md:text-xl text-slate-300 mb-10 md:mb-12">Pilih tingkat kelasmu, lalu mata pelajaran yang mau dibecandain!</p>
 
-      <!-- Pilih Tingkat -->
       <div class="grid gap-6 grid-cols-1 sm:grid-cols-3 mb-12 md:mb-16">
         <button onclick="selectLevel('sd')" class="bg-gradient-to-br from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 py-10 rounded-2xl font-bold text-xl shadow-xl transition transform hover:scale-105 hover:shadow-2xl">
           <i class="fas fa-child text-5xl mb-4 block"></i>SD
@@ -81,7 +64,6 @@
         </button>
       </div>
 
-      <!-- Pilih Mata Pelajaran -->
       <div id="subjectSelection" class="hidden">
         <h3 class="text-3xl font-bold mb-8">Pilih Mata Pelajaran</h3>
         <div id="subjectsGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
@@ -89,7 +71,6 @@
     </div>
   </div>
 
-  <!-- Game Area -->
   <div id="gameArea" class="hidden">
     <div class="bg-slate-900/70 backdrop-blur-lg p-6 md:p-8 rounded-3xl border border-slate-700/50 shadow-2xl">
       <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -116,7 +97,6 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
   <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 items-center justify-center backdrop-blur-sm">
     <div class="bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-700 w-full max-w-lg shadow-2xl">
       <h2 class="text-3xl font-bold mb-8 text-center">Pengaturan WSB</h2>
@@ -129,99 +109,6 @@
 </div>
 
 <script>
-// ================= DATA SOAL (BANK SOAL LENGKAP) =================
-const gameData = {
-  sd: {
-    "Bahasa Indonesia": [
-      { q: "Apa yang dimaksud dengan pantun?", a: ["Cerita pendek", "Puisi berima", "Lagu daerah", "Dongeng"], correct: 1 },
-      { q: "Sinonim dari kata 'rajin' adalah...", a: ["Malas", "Tekun", "Lambat", "Ceroboh"], correct: 1 },
-      { q: "Antonym dari 'besar' adalah...", a: ["Kecil", "Tinggi", "Panjang", "Lebar"], correct: 0 },
-      { q: "Kalimat perintah diakhiri dengan tanda...", a: ["Titik", "Seru (!)", "Tanya (?)", "Koma (,)"], correct: 1 },
-      { q: "Apa judul lagu kebangsaan Indonesia?", a: ["Indonesia Raya", "Majulah Indonesia", "Garuda Pancasila", "Hari Merdeka"], correct: 0 },
-      { q: "Apa arti kata 'cerdas'?", a: ["Bodoh", "Pintar", "Lambat", "Malas"], correct: 1 },
-      { q: "Apa itu cerita fabel?", a: ["Cerita tentang hewan", "Cerita sejarah", "Cerita horor", "Cerita romantis"], correct: 0 },
-      { q: "Apa itu ejaan?", a: ["Cara menulis kata", "Cara membaca", "Cara berbicara", "Cara mendengar"], correct: 0 },
-      { q: "Apa itu puisi?", a: ["Karangan bebas", "Karangan berima", "Karangan panjang", "Karangan pendek"], correct: 1 },
-      { q: "Apa sinonim dari 'senang'?", a: ["Sedih", "Gembira", "Marah", "Takut"], correct: 1 },
-      { q: "Apa itu dongeng?", a: ["Cerita nyata", "Cerita khayalan", "Cerita sejarah", "Cerita berita"], correct: 1 },
-      { q: "Kalimat berita diakhiri dengan tanda...", a: ["Seru", "Tanya", "Titik", "Koma"], correct: 2 }
-    ],
-    "Matematika": [
-      { q: "5 + 3 × 2 = ?", a: ["16", "11", "8", "10"], correct: 1 },
-      { q: "Berapa sisi segitiga?", a: ["4", "3", "5", "6"], correct: 1 },
-      { q: "12 ÷ 4 = ?", a: ["2", "3", "4", "6"], correct: 1 },
-      { q: "15 - 7 = ?", a: ["8", "9", "7", "10"], correct: 0 },
-      { q: "Pecahan dari 0.75 adalah...", a: ["1/2", "3/4", "1/4", "2/3"], correct: 1 },
-      { q: "1 lusin = 12, maka 3 lusin = ?", a: ["30", "36", "24", "48"], correct: 1 },
-      { q: "Keliling persegi sisi 6 cm adalah...", a: ["18 cm", "24 cm", "36 cm", "12 cm"], correct: 1 },
-      { q: "Luas persegi sisi 5 cm adalah...", a: ["20 cm²", "25 cm²", "15 cm²", "30 cm²"], correct: 1 },
-      { q: "10 × 7 = ?", a: ["60", "70", "80", "90"], correct: 1 },
-      { q: "Bilangan Romawi untuk 50 adalah...", a: ["L", "C", "X", "V"], correct: 0 }
-    ],
-    "IPA": [
-      { q: "Organ yang memompa darah adalah...", a: ["Hati", "Jantung", "Paru-paru", "Ginjal"], correct: 1 },
-      { q: "Hewan yang bernapas dengan insang adalah...", a: ["Kucing", "Ikan", "Burung", "Kelinci"], correct: 1 },
-      { q: "Sumber energi utama Bumi adalah...", a: ["Angin", "Matahari", "Air", "Batu bara"], correct: 1 },
-      { q: "Air menjadi es disebut proses...", a: ["Menguap", "Membeku", "Mengembun", "Mencair"], correct: 1 },
-      { q: "Fungsi akar tumbuhan adalah...", a: ["Membuat bunga", "Menyerap air", "Membuat makanan", "Bernapas"], correct: 1 },
-      { q: "Tumbuhan membuat makanan melalui proses...", a: ["Fotosintesis", "Respirasi", "Pencernaan", "Penguapan"], correct: 0 },
-      { q: "Planet kita bernama...", a: ["Mars", "Bumi", "Venus", "Jupiter"], correct: 1 },
-      { q: "Hewan omnivora makan...", a: ["Tumbuhan saja", "Daging saja", "Tumbuhan dan daging", "Tanah"], correct: 2 },
-      { q: "Warna langit cerah adalah...", a: ["Merah", "Biru", "Hijau", "Kuning"], correct: 1 },
-      { q: "Hujan disebabkan oleh...", a: ["Awan", "Angin", "Matahari", "Bulan"], correct: 0 }
-    ],
-    "IPS": [
-      { q: "Presiden pertama Indonesia adalah...", a: ["Soeharto", "Soekarno", "Jokowi", "Habibie"], correct: 1 },
-      { q: "Ibu kota Indonesia adalah...", a: ["Surabaya", "Jakarta", "Bandung", "Medan"], correct: 1 },
-      { q: "Hari Kemerdekaan diperingati tanggal...", a: ["17 Agustus", "1 Juni", "20 Mei", "10 November"], correct: 0 },
-      { q: "Lambang negara Indonesia adalah...", a: ["Garuda Pancasila", "Bintang", "Bulan", "Matahari"], correct: 0 },
-      { q: "Indonesia memiliki sekitar berapa pulau?", a: ["1", "17.000+", "5", "100"], correct: 1 },
-      { q: "Sungai terpanjang di Indonesia adalah...", a: ["Kapuas", "Ciliwung", "Bengawan Solo", "Mahakam"], correct: 0 },
-      { q: "Gunung tertinggi di Indonesia adalah...", a: ["Puncak Jaya", "Merapi", "Rinjani", "Semeru"], correct: 0 },
-      { q: "Pahlawan emansipasi wanita Indonesia adalah...", a: ["R.A. Kartini", "Cut Nyak Dhien", "Dewi Sartika", "Fatmawati"], correct: 0 },
-      { q: "Mata uang Indonesia adalah...", a: ["Dollar", "Rupiah", "Yen", "Euro"], correct: 1 },
-      { q: "Ibu kota Provinsi Jawa Barat adalah...", a: ["Bandung", "Semarang", "Surabaya", "Yogyakarta"], correct: 0 }
-    ],
-    "Bahasa Jepang": [
-      { q: "Arti 'arigatou' adalah...", a: ["Terima kasih", "Selamat pagi", "Selamat malam", "Halo"], correct: 0 },
-      { q: "Hiragana untuk 'a' adalah...", a: ["あ", "い", "う", "え"], correct: 0 },
-      { q: "Arti 'konbanwa' adalah...", a: ["Selamat pagi", "Selamat siang", "Selamat malam", "Selamat tinggal"], correct: 2 },
-      { q: "Makanan nasi gulung Jepang disebut...", a: ["Sushi", "Ramen", "Tempura", "Sashimi"], correct: 0 },
-      { q: "Arti 'sayonara' adalah...", a: ["Halo", "Selamat tinggal", "Terima kasih", "Maaf"], correct: 1 },
-      { q: "Ibu kota Jepang adalah...", a: ["Tokyo", "Kyoto", "Osaka", "Hiroshima"], correct: 0 }
-    ],
-    "PPS": [
-      { q: "Sila pertama Pancasila adalah...", a: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang Adil", "Persatuan Indonesia", "Kerakyatan"], correct: 0 },
-      { q: "Pancasila berarti...", a: ["Lima dasar", "Tiga dasar", "Empat dasar", "Enam dasar"], correct: 0 },
-      { q: "Hari lahir Pancasila diperingati tanggal...", a: ["1 Juni", "17 Agustus", "28 Oktober", "10 November"], correct: 0 },
-      { q: "Lambang sila ketiga adalah...", a: ["Pohon Beringin", "Bintang", "Rantai", "Kepala Banteng"], correct: 0 },
-      { q: "Bhinneka Tunggal Ika artinya...", a: ["Berbeda-beda tetapi satu jua", "Sama semua", "Satu saja", "Banyak tapi berbeda"], correct: 0 }
-    ]
-  },
-  smp: {
-    "Bahasa Indonesia": [
-      { q: "Apa itu majas hiperbola?", a: ["Perbandingan", "Pernyataan berlebihan", "Personifikasi", "Metafora"], correct: 1 },
-      { q: "Teks prosedur biasanya berisi...", a: ["Cerita", "Langkah-langkah", "Pendapat", "Deskripsi"], correct: 1 },
-      { q: "Sinonim dari 'optimis' adalah...", a: ["Pesimis", "Yakin", "Takut", "Sedih"], correct: 1 },
-      { q: "Apa itu teks eksposisi?", a: ["Menjelaskan sesuatu", "Menceritakan", "Memerintah", "Menggambarkan"], correct: 0 },
-      { q: "Majas personifikasi adalah...", a: ["Benda seperti manusia", "Berlebihan", "Perbandingan", "Kiasan"], correct: 0 }
-    ],
-    "Matematika": [
-      { q: "Akar kuadrat 144 adalah...", a: ["12", "14", "16", "10"], correct: 0 },
-      { q: "Rumus luas lingkaran adalah...", a: ["πr²", "2πr", "πd", "r²"], correct: 0 },
-      { q: "3x - 6 = 12, x = ?", a: ["6", "4", "3", "18"], correct: 0 }
-    ],
-    // ... tambahkan mapel lain sesuai kebutuhan
-  },
-  sma: {
-    "Bahasa Indonesia": [
-      { q: "Majas hiperbola adalah...", a: ["Pernyataan berlebihan", "Perbandingan langsung", "Penyerupaan", "Pemindahan makna"], correct: 0 },
-      { q: "Tokoh utama novel Bumi Manusia adalah...", a: ["Minke", "Nyai Ontosoroh", "Annelies", "Robert Surcouf"], correct: 0 }
-    ],
-    // ... tambahkan mapel lain
-  }
-};
-
 // ================= STATE =================
 let currentGame = {
   level: null,
@@ -274,8 +161,30 @@ const subjects = {
   ]
 };
 
+// ================= LOAD SOAL DARI JSON =================
+let allSoal = [];
+
+async function loadSoal() {
+  try {
+    const response = await fetch('soal.json');
+    if (!response.ok) throw new Error('Gagal load soal.json');
+    allSoal = await response.json();
+    console.log(`Berhasil load ${allSoal.length} soal dari soal.json`);
+  } catch (error) {
+    console.error("Error load soal.json:", error);
+    alert("Gagal memuat soal. Cek file soal.json di repo ya bro!");
+  }
+}
+
+// Fungsi ambil soal berdasarkan tingkat & mapel
+function getSoal(tingkat, mapel) {
+  return allSoal.filter(s => s.tingkat === tingkat && s.mapel === mapel);
+}
+
 // ================= INIT =================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadSoal();
+
   document.getElementById('configBtn').addEventListener('click', () => {
     document.getElementById('settingsModal').classList.remove('hidden');
     document.getElementById('settingsModal').classList.add('flex');
@@ -303,24 +212,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function startGameWithSubject(subjectName) {
+  window.startGameWithSubject = function(subjectName) {
     currentGame.subject = subjectName;
-    currentGame.questions = gameData[currentGame.level][subjectName] || [];
+    currentGame.questions = getSoal(currentGame.level, subjectName);
     currentGame.currentIndex = 0;
     currentGame.score = 0;
     currentGame.timeLeft = 30;
 
     elements.startScreen.classList.add('hidden');
     elements.gameArea.classList.remove('hidden');
-    elements.totalQEl.textContent = currentGame.questions.length || 0;
+    elements.totalQEl.textContent = currentGame.questions.length;
 
     if (currentGame.questions.length === 0) {
-      elements.questionEl.textContent = "Belum ada soal untuk mata pelajaran ini. Sabar ya, lagi ditambahin!";
+      elements.questionEl.textContent = "Belum ada soal untuk mapel ini bro. Sabar ya, lagi ditambahin!";
       return;
     }
 
     nextQuestion();
-  }
+  };
 
   function nextQuestion() {
     if (currentGame.currentIndex >= currentGame.questions.length) {
@@ -329,18 +238,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const q = currentGame.questions[currentGame.currentIndex];
-    elements.questionEl.textContent = q.q;
+    elements.questionEl.textContent = q.pertanyaan || q.q;
     elements.qNumberEl.textContent = currentGame.currentIndex + 1;
     elements.scoreEl.textContent = currentGame.score;
 
     elements.optionsEl.innerHTML = '';
-    const shuffled = [...q.a].sort(() => Math.random() - 0.5);
+    const shuffled = [...(q.pilihan || q.a)].sort(() => Math.random() - 0.5);
 
-    shuffled.forEach((ans, idx) => {
+    shuffled.forEach((ans) => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn w-full bg-slate-800/80 hover:bg-slate-700 p-5 md:p-6 rounded-2xl text-left text-base md:text-lg border-2 border-slate-600 backdrop-blur-sm transition';
       btn.textContent = ans;
-      btn.addEventListener('click', () => checkAnswer(ans === q.a[q.correct], btn, q.a[q.correct]));
+      btn.addEventListener('click', () => checkAnswer(ans === q.pilihan[q.jawabanBenar] || ans === q.a[q.correct], btn, q.pilihan[q.jawabanBenar] || q.a[q.correct]));
       elements.optionsEl.appendChild(btn);
     });
 
